@@ -5,13 +5,10 @@ import CustButton from "../components/CustButton";
 import CustText from "../components/CustText";
 import color from "../config/color";
 
-const RegisterScreen = () => {
+const RegisterScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <Image
-        style={styles.image}
-        source={require("../../assets/regscreen.png")}
-      />
+      <Image style={styles.image} source={require("../../assets/icon.png")} />
       <View style={styles.textContainer}>
         <Text style={[styles.text, styles.header]}>Welcome Onboard!</Text>
         <Text style={styles.text}>Let's help you get started</Text>
@@ -24,10 +21,12 @@ const RegisterScreen = () => {
       <CustText placeholder="Enter Password" hidden></CustText>
       <CustText placeholder="Confirm Password" hidden></CustText>
       <CustButton type="register" title="Register" />
-      <Text style={styles.text}>
-        Already have an account?
-        <Text style={{ color: "dodgerblue" }}>Sign in</Text>
-      </Text>
+      <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+        <Text style={styles.text}>
+          Already have an account?
+          <Text style={{ color: "dodgerblue" }}> Sign in</Text>
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -37,10 +36,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flex: 1,
     justifyContent: "center",
-  },
-  image: {
-    width: 250,
-    height: 250,
   },
   header: {
     fontSize: 25,

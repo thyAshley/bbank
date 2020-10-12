@@ -17,7 +17,7 @@ export default function LoginScreen({ navigation }) {
         <CustButton
           title="Login"
           type="login"
-          onPress={() => console.log("log in")}
+          onPress={() => navigation.navigate("Login")}
         />
         <View
           style={{
