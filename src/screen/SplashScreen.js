@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, View, Image } from "react-native";
 import CustButton from "../components/CustButton";
+import color from "../config/color";
 
 export default function LoginScreen({ navigation }) {
   return (
@@ -55,7 +56,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   textStyle: {
-    color: "#F4A227",
+    color: color.text,
+    fontSize: 15,
   },
   imageStyle: {
     height: 150,

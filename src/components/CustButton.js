@@ -1,5 +1,6 @@
 import React from "react";
 import { TouchableOpacity, StyleSheet, View, Text } from "react-native";
+import color from "../config/color";
 
 const CustButton = ({ title, onPress, type }) => {
   return (
@@ -20,7 +21,7 @@ const styles = StyleSheet.create({
   },
   login: {
     paddingVertical: 10,
-    backgroundColor: "#50D6E9",
+    backgroundColor: color.primary,
     alignItems: "center",
     marginVertical: 25,
     borderRadius: 20,
@@ -32,7 +33,7 @@ const styles = StyleSheet.create({
   },
   register: {
     paddingVertical: 10,
-    backgroundColor: "#50E9C1",
+    backgroundColor: color.secondary,
     alignItems: "center",
     marginVertical: 25,
     borderRadius: 20,
