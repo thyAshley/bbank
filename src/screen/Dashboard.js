@@ -1,9 +1,31 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import Card from "../components/Card";
 import Circle from "../components/Circle";
 
+const dummyAccount = {
+  totalBalance: 6234.01,
+  accounts: [
+    {
+      bank: "dbs",
+      name: "Savings Account",
+      number: "123-567890-1",
+      balance: 3034.56,
+    },
+    {
+      bank: "uob",
+      name: "Basic Savings Account",
+      number: "123-567-789-0",
+      balance: 3200.0,
+    },
+  ],
+};
 const Dashboard = () => {
+  const [account, setAccount] = useState({ totalBalance: "0" });
+  useEffect(() => {
+    setAccount(dummyAccount);
+  }, []);
+
   return (
     <View style={styles.container}>
       <Circle />
@@ -17,7 +39,11 @@ const Dashboard = () => {
       </View>
       <Text>Summary</Text>
       <View style={styles.summaryContainer}>
-        <Card title="Bank Accounts" text="Balance" amount="6,234.56" />
+        <Card
+          title="Bank Accounts"
+          text="Balance"
+          amount={account.totalBalance}
+        />
         <Card
           title="Credit Cards"
           text="Outstanding Amount"

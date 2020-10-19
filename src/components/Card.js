@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Button, StyleSheet, Text, View } from "react-native";
 import color from "../config/color";
 
 const Card = ({
@@ -12,7 +12,9 @@ const Card = ({
     <View style={[styles.container, { backgroundColor }]}>
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.text}>{text}</Text>
-      <Text style={styles.amount}>$ {amount}</Text>
+      <Text style={styles.amount}>
+        $ {amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+      </Text>
     </View>
   );
 };
@@ -24,7 +26,8 @@ const styles = StyleSheet.create({
     width: "90%",
     paddingVertical: 15,
     paddingHorizontal: 20,
-    borderRadius: 10,
+    borderTopEndRadius: 10,
+    borderTopStartRadius: 10,
     margin: 15,
   },
   title: {
