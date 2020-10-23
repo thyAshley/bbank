@@ -1,7 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import {
+  Button,
+  Image,
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  SafeAreaView,
+} from "react-native";
+
 import Card from "../components/Card";
 import Circle from "../components/Circle";
+import { AuthContext } from "../context/AuthContext";
+import { getAccountDetailsById } from "../../mockdata";
+import InfoCard from "../components/InfoCard";
+import ContactList from "../components/ContactList";
 
 const dummyAccount = {
   totalBalance: 6234.01,
@@ -20,37 +33,93 @@ const dummyAccount = {
     },
   ],
 };
+
 const Dashboard = () => {
-  const [account, setAccount] = useState({ totalBalance: "0" });
+  const [showAccount, setShowAccount] = useState(false);
+  const [showCard, setShowCard] = useState(false);
+  const { uid, logout } = useContext(AuthContext);
+  const [bank, setBank] = useState([]);
+  const [creditCard, setCreditCard] = useState([]);
+
   useEffect(() => {
-    setAccount(dummyAccount);
+    const { bank, creditCard } = getAccountDetailsById(uid);
+    setBank(bank);
+    setCreditCard(creditCard);
   }, []);
 
+  const displayAccount = () => {
+    setShowAccount(!showAccount);
+  };
+
+  const displayCard = () => {
+    setShowCard(!showCard);
+  };
   return (
-    <View style={styles.container}>
-      <Circle />
-      <Circle otherStyle={styles.circle2} />
-      <View style={styles.top}>
-        <Image
-          style={styles.image}
-          source={{ uri: "https://picsum.photos/id/1/200/300" }}
-        />
-        <Text style={styles.text}>Welcome Oliver!</Text>
-      </View>
-      <Text>Summary</Text>
-      <View style={styles.summaryContainer}>
-        <Card
-          title="Bank Accounts"
-          text="Balance"
-          amount={account.totalBalance}
-        />
-        <Card
-          title="Credit Cards"
-          text="Outstanding Amount"
-          amount="3,210.12"
-          backgroundColor="rgb(90,234,196)"
-        />
-      </View>
+    <View style={{ flex: 1 }}>
+      <ScrollView overScrollMode="always" style={{ flex: 1 }}>
+        <Circle />
+        <Circle otherStyle={styles.circle2} />
+        <View style={styles.top}>
+          <Image
+            style={styles.image}
+            source={{ uri: "https://picsum.photos/id/1/200/300" }}
+          />
+          <Text style={styles.text}>Welcome Oliver!</Text>
+        </View>
+        <ContactList />
+        <Text
+          style={{
+            fontSize: 18,
+            fontWeight: "bold",
+            marginLeft: 25,
+            marginTop: 10,
+          }}
+        >
+          Summary
+        </Text>
+        <View style={styles.summaryContainer}>
+          <Card
+            title="Bank Accounts"
+            text="Balance"
+            amount={bank.reduce((acc, val) => acc + val.amount, 0)}
+            display={displayAccount}
+            direction={showAccount}
+          />
+          {showAccount &&
+            bank?.map((b) => (
+              <InfoCard
+                key={b.accountNumber}
+                title={b.bankName}
+                accNumber={b.accountNumber}
+                amount={b.amount}
+                text="Available Balance"
+                callToAction="View Transaction"
+              />
+            ))}
+          <View style={{ height: 10 }} />
+          <Card
+            title="Credit Cards"
+            text="Outstanding Amount"
+            amount={creditCard.reduce((acc, val) => acc + val.amount, 0)}
+            backgroundColor="rgb(90,234,196)"
+            display={displayCard}
+            direction={showCard}
+          />
+          {showCard &&
+            creditCard?.map((b) => (
+              <InfoCard
+                backgroundColor="rgb(90,234,196)"
+                key={b.cardId}
+                title={b.accountType}
+                accNumber={b.cardNumber}
+                amount={b.amount}
+                text="Outstanding Amount"
+                callToAction="Pay Card"
+              />
+            ))}
+        </View>
+        <View style={{ height: 40 }}></View>
+      </ScrollView>
     </View>
   );
 };
@@ -73,7 +142,7 @@ const styles = StyleSheet.create({
   },
   top: {
     backgroundColor: "#20c6dd",
-    height: "30%",
+    height: 200,
     justifyContent: "center",
     alignItems: "center",
   },

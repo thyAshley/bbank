@@ -107,7 +107,7 @@ const accountDetails = [
 ];
 
 const getAccountDetailsById = (userId) => {
-  return accountDetails.filter((account) => account.userId === userId);
+  return accountDetails.find((account) => account.userId === userId);
 };
 
 const login = (email, password) => {

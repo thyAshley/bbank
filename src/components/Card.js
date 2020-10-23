@@ -1,5 +1,12 @@
 import React from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
+import {
+  Button,
+  StyleSheet,
+  Text,
+  View,
+  TouchableWithoutFeedback,
+} from "react-native";
+import { AntDesign } from "@expo/vector-icons";
 import color from "../config/color";
 
 const Card = ({
@@ -7,10 +14,23 @@ const Card = ({
   text,
   amount,
   backgroundColor = "rgb(126,219,233)",
+  display,
+  direction,
 }) => {
   return (
     <View style={[styles.container, { backgroundColor }]}>
       <Text style={styles.title}>{title}</Text>
+      <View style={{ alignItems: "flex-end" }}>
+        {!direction ? (
+          <TouchableWithoutFeedback onPress={display}>
+            <AntDesign name="caretdown" size={24} color="black" />
+          </TouchableWithoutFeedback>
+        ) : (
+          <TouchableWithoutFeedback onPress={display}>
+            <AntDesign name="caretup" size={24} color="black" />
+          </TouchableWithoutFeedback>
+        )}
+      </View>
       <Text style={styles.text}>{text}</Text>
       <Text style={styles.amount}>
         $ {amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
@@ -28,7 +48,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderTopEndRadius: 10,
     borderTopStartRadius: 10,
-    margin: 15,
+    marginTop: 20,
   },
   title: {
     letterSpacing: 1.2,
