@@ -145,8 +145,6 @@ const transferCard = (userId, fundBankId, targetCardId, amount) => {
   return account;
 };
 
-console.log(transferCard(3, 1, 2, 1000));
-
 module.exports = {
   getAccountDetailsById,
   login,

@@ -11,6 +11,7 @@ import Dashboard from "../screen/Dashboard";
 import InProgress from "../screen/InProgress";
 import color from "../config/color";
 import Account from "../screen/Account";
+import payTransfer from "../screen/payTransfer";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -34,7 +35,7 @@ export const BottomTab = () => {
       />
       <Tab.Screen
         name="Pay/Transfer"
-        component={InProgress}
+        component={payTransfer}
         options={{
           headerShown: false,
           tabBarIcon: ({ focused }) => (

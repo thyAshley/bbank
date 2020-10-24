@@ -10,6 +10,7 @@ const InfoCard = ({
   backgroundColor = "rgb(126,219,233)",
   text,
   callToAction,
+  ctAction,
 }) => {
   return (
     <View style={[styles.container]}>
@@ -23,16 +24,21 @@ const InfoCard = ({
             <Text style={styles.title}>{title}</Text>
             <Text style={styles.accNumber}>{accNumber}</Text>
           </View>
-          <TouchableOpacity style={{ position: "absolute", left: 180 }}>
-            <Text
-              style={[
-                styles.callAction,
-                { color: backgroundColor, borderColor: backgroundColor },
-              ]}
+          {callToAction && (
+            <TouchableOpacity
+              style={{ position: "absolute", left: 180 }}
+              onPress={ctAction}
             >
-              {callToAction}
-            </Text>
-          </TouchableOpacity>
+              <Text
+                style={[
+                  styles.callAction,
+                  { color: backgroundColor, borderColor: backgroundColor },
+                ]}
+              >
+                {callToAction}
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
       <Text style={styles.amount}>
