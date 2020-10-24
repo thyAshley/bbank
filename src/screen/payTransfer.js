@@ -12,8 +12,9 @@ import color from "../config/color";
 import { getAccountDetailsById } from "../../mockdata";
 import { AuthContext } from "../context/AuthContext";
 import InfoCard from "../components/InfoCard";
+import PaymentModal from "../components/PaymentModal";
 
-export default function payTransfer({ route = null }) {
+export default function payTransfer({ route = null, navigation }) {
   const { uid, logout } = useContext(AuthContext);
   const [bank, setBank] = useState([]);
   const [creditCard, setCreditCard] = useState([]);
@@ -22,6 +23,7 @@ export default function payTransfer({ route = null }) {
   const [displayFund, setDisplayFund] = useState(true);
   const [displayCard, setDisplayCard] = useState(false);
   const [transferType, setTransferType] = useState("");
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const { bank, creditCard } = getAccountDetailsById(uid);
@@ -36,96 +38,20 @@ export default function payTransfer({ route = null }) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.topContainer}>
-        <Text style={styles.topContainerText}>Pay / Transfer</Text>
-      </View>
-      <View style={styles.imgContainer}>
-        <Image
-          style={styles.image}
-          source={require("../../assets/transferMoney.png")}
-        />
-      </View>
-      <ScrollView>
-        <View style={styles.header}>
-          <Text
-            style={{
-              marginLeft: 20,
-              fontSize: 16,
-              fontWeight: "500",
-              marginVertical: 10,
-            }}
-          >
-            Funds
-          </Text>
-          <View
-            style={{
-              flexGrow: 1,
-              alignItems: "flex-end",
-              marginRight: 20,
-            }}
-          >
-            <Text onPress={() => setDisplayFund(true)} style={styles.btn}>
-              Select Fund
-            </Text>
+      {showModal ? (
+        <PaymentModal navigation={navigation} hideModal={setShowModal} />
+      ) : (
+        <Fragment>
+          <View style={styles.topContainer}>
+            <Text style={styles.topContainerText}>Pay / Transfer</Text>
           </View>
-        </View>
-        <View style={styles.fundContainer}>
-          {!displayFund && selectedBank && (
-            <InfoCard
-              key={selectedBank.accountNumber}
-              title={selectedBank.bankName}
-              accNumber={selectedBank.accountNumber}
-              amount={selectedBank.amount}
-              text="Available Balance"
+          <View style={styles.imgContainer}>
+            <Image
+              style={styles.image}
+              source={require("../../assets/transferMoney.png")}
             />
-          )}
-
-          {displayFund &&
-            bank?.map((b) => (
-              <InfoCard
-                key={b.accountNumber}
-                title={b.bankName}
-                accNumber={b.accountNumber}
-                amount={b.amount}
-                text="Available Balance"
-                callToAction="SELECT"
-                ctAction={() => {
-                  setDisplayFund(false);
-                  setSelectedBank(b);
-                }}
-              />
-            ))}
-        </View>
-        <View style={styles.paymentContainer}>
-          <View
-            style={[
-              styles.paymentOptionContainer,
-              { backgroundColor: color.primary },
-            ]}
-          >
-            <Text
-              style={{ width: "100%", textAlign: "center" }}
-              onPress={() => setTransferType("card")}
-            >
-              Pay Card
-            </Text>
           </View>
-          <View
-            style={[
-              styles.paymentOptionContainer,
-              { backgroundColor: color.secondary },
-            ]}
-          >
-            <Text
-              style={{ width: "100%", textAlign: "center" }}
-              onPress={() => setTransferType("others")}
-            >
-              Transfer
-            </Text>
-          </View>
-        </View>
-        {transferType === "card" ? (
-          <Fragment>
+          <ScrollView>
             <View style={styles.header}>
               <Text
                 style={{
@@ -135,7 +61,7 @@ export default function payTransfer({ route = null }) {
                   marginVertical: 10,
                 }}
               >
-                Card
+                Funds
               </Text>
               <View
                 style={{
@@ -144,109 +70,205 @@ export default function payTransfer({ route = null }) {
                   marginRight: 20,
                 }}
               >
-                <Text onPress={() => setDisplayCard(true)} style={styles.btn}>
-                  Select Card
+                <Text onPress={() => setDisplayFund(true)} style={styles.btn}>
+                  Select Fund
                 </Text>
               </View>
             </View>
             <View style={styles.fundContainer}>
-              {!displayCard && selectedCard ? (
+              {!displayFund && selectedBank && (
                 <InfoCard
-                  key={selectedCard.accountNumber}
-                  title={selectedCard.accountType}
-                  accNumber={selectedCard.cardNumber}
-                  amount={selectedCard.amount}
-                  text="Outstanding Amount"
+                  key={selectedBank.accountNumber}
+                  title={selectedBank.bankName}
+                  accNumber={selectedBank.accountNumber}
+                  amount={selectedBank.amount}
+                  text="Available Balance"
                 />
-              ) : null}
-              {displayCard &&
-                creditCard?.map((c) => (
+              )}
+
+              {displayFund &&
+                bank?.map((b) => (
                   <InfoCard
-                    key={c.cardId}
-                    title={c.accountType}
-                    accNumber={c.cardNumber}
-                    amount={c.amount}
-                    text="Outstanding Amount"
-                    callToAction="PAY"
+                    key={b.accountNumber}
+                    title={b.bankName}
+                    accNumber={b.accountNumber}
+                    amount={b.amount}
+                    text="Available Balance"
+                    callToAction="SELECT"
                     ctAction={() => {
-                      setDisplayCard(false);
-                      setSelectedCard(c);
+                      setDisplayFund(false);
+                      setSelectedBank(b);
                     }}
                   />
                 ))}
             </View>
-          </Fragment>
-        ) : transferType === "others" ? (
-          <View style={styles.methodContainer}>
-            <View style={styles.payMethod}>
-              <Text style={{ flexGrow: 1 }}>Unique Entity Number (UEN)</Text>
-              <AntDesign name="closecircle" size={24} color="black" />
-            </View>
-            <View style={styles.payMethod}>
-              <Text style={{ flexGrow: 1 }}>Mobile Number</Text>
-              <AntDesign name="closecircle" size={24} color="black" />
-            </View>
-            <View style={styles.payMethod}>
-              <Text style={{ flexGrow: 1 }}>BBank Account ID</Text>
-              <AntDesign name="caretdown" size={24} color="black" />
-            </View>
-            <View style={styles.information}>
-              <View style={{ flexDirection: "row" }}>
-                <Text
-                  style={{ alignSelf: "center", marginRight: 5, width: "20%" }}
-                >
-                  Account ID:
-                </Text>
-                <TextInput
-                  style={[styles.input, { flexGrow: 10 }]}
-                  placeholder="Account ID"
-                />
-              </View>
-              <View style={{ flexDirection: "row" }}>
-                <Text
-                  style={{ alignSelf: "center", marginRight: 5, width: "20%" }}
-                >
-                  Amount:
-                </Text>
-                <TextInput
-                  style={[styles.input, { flexGrow: 10 }]}
-                  placeholder="Amount"
-                  keyboardType="number-pad"
-                />
-              </View>
-            </View>
-          </View>
-        ) : null}
-        {selectedCard
-          ? setSelectedBank && (
+            <View style={styles.paymentContainer}>
               <View
-                style={{
-                  width: "100%",
-                  height: 40,
-                  margin: 20,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  flexDirection: "column",
-                }}
+                style={[
+                  styles.paymentOptionContainer,
+                  { backgroundColor: color.primary },
+                ]}
               >
                 <Text
-                  style={[
-                    styles.btn,
-                    {
-                      padding: 15,
-                      textAlign: "center",
-                      backgroundColor: color.secondary,
-                      color: "black",
-                    },
-                  ]}
+                  style={{ width: "100%", textAlign: "center" }}
+                  onPress={() => setTransferType("card")}
                 >
-                  Make Payment
+                  Pay Card
                 </Text>
               </View>
-            )
-          : null}
-        <View style={{ height: 20 }} />
-      </ScrollView>
+              <View
+                style={[
+                  styles.paymentOptionContainer,
+                  { backgroundColor: color.secondary },
+                ]}
+              >
+                <Text
+                  style={{ width: "100%", textAlign: "center" }}
+                  onPress={() => setTransferType("others")}
+                >
+                  Transfer
+                </Text>
+              </View>
+            </View>
+            {transferType === "card" ? (
+              <Fragment>
+                <View style={styles.header}>
+                  <Text
+                    style={{
+                      marginLeft: 20,
+                      fontSize: 16,
+                      fontWeight: "500",
+                      marginVertical: 10,
+                    }}
+                  >
+                    Card
+                  </Text>
+                  <View
+                    style={{
+                      flexGrow: 1,
+                      alignItems: "flex-end",
+                      marginRight: 20,
+                    }}
+                  >
+                    <Text
+                      onPress={() => setDisplayCard(true)}
+                      style={styles.btn}
+                    >
+                      Select Card
+                    </Text>
+                  </View>
+                </View>
+                <View style={styles.fundContainer}>
+                  {!displayCard && selectedCard ? (
+                    <InfoCard
+                      key={selectedCard.accountNumber}
+                      title={selectedCard.accountType}
+                      accNumber={selectedCard.cardNumber}
+                      amount={selectedCard.amount}
+                      text="Outstanding Amount"
+                    />
+                  ) : null}
+                  {displayCard &&
+                    creditCard?.map((c) => (
+                      <InfoCard
+                        key={c.cardId}
+                        title={c.accountType}
+                        accNumber={c.cardNumber}
+                        amount={c.amount}
+                        text="Outstanding Amount"
+                        callToAction="PAY"
+                        ctAction={() => {
+                          setDisplayCard(false);
+                          setSelectedCard(c);
+                        }}
+                      />
+                    ))}
+                </View>
+              </Fragment>
+            ) : transferType === "others" ? (
+              <View style={styles.methodContainer}>
+                <View style={styles.payMethod}>
+                  <Text style={{ flexGrow: 1 }}>
+                    Unique Entity Number (UEN)
+                  </Text>
+                  <AntDesign name="closecircle" size={24} color="black" />
+                </View>
+                <View style={styles.payMethod}>
+                  <Text style={{ flexGrow: 1 }}>Mobile Number</Text>
+                  <AntDesign name="closecircle" size={24} color="black" />
+                </View>
+                <View style={styles.payMethod}>
+                  <Text style={{ flexGrow: 1 }}>BBank Account ID</Text>
+                  <AntDesign name="caretdown" size={24} color="black" />
+                </View>
+                <View style={styles.information}>
+                  <View style={{ flexDirection: "row" }}>
+                    <Text
+                      style={{
+                        alignSelf: "center",
+                        marginRight: 5,
+                        width: "20%",
+                      }}
+                    >
+                      Account ID:
+                    </Text>
+                    <TextInput
+                      style={[styles.input, { flexGrow: 10 }]}
+                      placeholder="Account ID"
+                    />
+                  </View>
+                  <View style={{ flexDirection: "row" }}>
+                    <Text
+                      style={{
+                        alignSelf: "center",
+                        marginRight: 5,
+                        width: "20%",
+                      }}
+                    >
+                      Amount:
+                    </Text>
+                    <TextInput
+                      style={[styles.input, { flexGrow: 10 }]}
+                      placeholder="Amount"
+                      keyboardType="number-pad"
+                    />
+                  </View>
+                </View>
+              </View>
+            ) : null}
+            {selectedCard
+              ? setSelectedBank && (
+                  <View
+                    style={{
+                      width: "100%",
+                      height: 40,
+                      margin: 20,
+                      justifyContent: "center",
+                      alignItems: "center",
+                      flexDirection: "column",
+                    }}
+                  >
+                    <Text
+                      style={[
+                        styles.btn,
+                        {
+                          padding: 15,
+                          textAlign: "center",
+                          backgroundColor: color.secondary,
+                          color: "black",
+                        },
+                      ]}
+                      onPress={() => setShowModal(true)}
+                    >
+                      Make Payment
+                    </Text>
+                  </View>
+                )
+              : null}
+            <View style={{ height: 20 }} />
+          </ScrollView>
+        </Fragment>
+      )}
     </View>
   );
 }
