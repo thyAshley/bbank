@@ -34,7 +34,7 @@ const dummyAccount = {
   ],
 };
 
-const Dashboard = () => {
+const Dashboard = ({ navigation }) => {
   const [showAccount, setShowAccount] = useState(false);
   const [showCard, setShowCard] = useState(false);
   const { uid, logout } = useContext(AuthContext);
@@ -66,7 +66,7 @@ const Dashboard = () => {
           />
           <Text style={styles.text}>Welcome Oliver!</Text>
         </View>
-        <ContactList />
+        <ContactList navigate={navigation.navigate} />
         <Text
           style={{
             fontSize: 18,

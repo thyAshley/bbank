@@ -102,6 +102,11 @@ const AppStackNavigator = () => {
         component={BottomTab}
         options={{ headerShown: false }}
       />
+      <Stack.Screen
+        name="Construction"
+        component={InProgress}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 };

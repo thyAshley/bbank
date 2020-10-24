@@ -4,16 +4,16 @@ import {
   Text,
   View,
   Image,
-  Button,
   ScrollView,
+  TextInput,
 } from "react-native";
-
+import { AntDesign } from "@expo/vector-icons";
 import color from "../config/color";
 import { getAccountDetailsById } from "../../mockdata";
 import { AuthContext } from "../context/AuthContext";
 import InfoCard from "../components/InfoCard";
 
-export default function payTransfer({ to = "" }) {
+export default function payTransfer({ to = "", navigation }) {
   const { uid, logout } = useContext(AuthContext);
   const [bank, setBank] = useState([]);
   const [creditCard, setCreditCard] = useState([]);
@@ -28,7 +28,6 @@ export default function payTransfer({ to = "" }) {
     setBank(bank);
     setCreditCard(creditCard);
   }, []);
-
   return (
     <View style={styles.container}>
       <View style={styles.topContainer}>
@@ -113,7 +112,7 @@ export default function payTransfer({ to = "" }) {
           >
             <Text
               style={{ width: "100%", textAlign: "center" }}
-              onPress={() => setTransferType("nonCard")}
+              onPress={() => setTransferType("others")}
             >
               Transfer
             </Text>
@@ -171,6 +170,46 @@ export default function payTransfer({ to = "" }) {
                 ))}
             </View>
           </Fragment>
+        ) : transferType === "others" ? (
+          <View style={styles.methodContainer}>
+            <View style={styles.payMethod}>
+              <Text style={{ flexGrow: 1 }}>Unique Entity Number (UEN)</Text>
+              <AntDesign name="closecircle" size={24} color="black" />
+            </View>
+            <View style={styles.payMethod}>
+              <Text style={{ flexGrow: 1 }}>Mobile Number</Text>
+              <AntDesign name="closecircle" size={24} color="black" />
+            </View>
+            <View style={styles.payMethod}>
+              <Text style={{ flexGrow: 1 }}>BBank Account ID</Text>
+              <AntDesign name="caretdown" size={24} color="black" />
+            </View>
+            <View style={styles.information}>
+              <View style={{ flexDirection: "row" }}>
+                <Text
+                  style={{ alignSelf: "center", marginRight: 5, width: "20%" }}
+                >
+                  Account ID:
+                </Text>
+                <TextInput
+                  style={[styles.input, { flexGrow: 10 }]}
+                  placeholder="Account ID"
+                />
+              </View>
+              <View style={{ flexDirection: "row" }}>
+                <Text
+                  style={{ alignSelf: "center", marginRight: 5, width: "20%" }}
+                >
+                  Amount:
+                </Text>
+                <TextInput
+                  style={[styles.input, { flexGrow: 10 }]}
+                  placeholder="Amount"
+                  keyboardType="number-pad"
+                />
+              </View>
+            </View>
+          </View>
         ) : null}
         {selectedCard
           ? setSelectedBank && (
@@ -207,6 +246,24 @@ export default function payTransfer({ to = "" }) {
 }
 
 const styles = StyleSheet.create({
+  information: {
+    flexGrow: 1,
+    marginHorizontal: 20,
+    marginVertical: 5,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  input: {
+    backgroundColor: "white",
+    padding: 10,
+  },
+  payMethod: {
+    backgroundColor: "white",
+    marginHorizontal: 20,
+    padding: 10,
+    marginBottom: 5,
+    flexDirection: "row",
+  },
   paymentContainer: {
     flexDirection: "row",
     marginHorizontal: 20,

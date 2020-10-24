@@ -3,14 +3,19 @@ import { StyleSheet, Text, View, ScrollView, Image } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import color from "../config/color";
 
-export default function ContactList() {
+export default function ContactList({ navigate }) {
   return (
     <View style={styles.container}>
       <Text style={{ fontSize: 18, fontWeight: "bold" }}>Quickpay</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         <View style={styles.imgContainer}>
           <View style={styles.new}>
-            <Entypo name="squared-plus" size={30} color={color.primary} />
+            <Entypo
+              name="squared-plus"
+              size={30}
+              color={color.primary}
+              onPress={() => navigate("Pay/Transfer")}
+            />
           </View>
           <Text style={styles.text}>New</Text>
         </View>
