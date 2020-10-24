@@ -36,6 +36,9 @@ export const BottomTab = () => {
       <Tab.Screen
         name="Pay/Transfer"
         component={payTransfer}
+        initialParams={{
+          route: null,
+        }}
         options={{
           headerShown: false,
           tabBarIcon: ({ focused }) => (

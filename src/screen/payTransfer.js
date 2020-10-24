@@ -13,21 +13,27 @@ import { getAccountDetailsById } from "../../mockdata";
 import { AuthContext } from "../context/AuthContext";
 import InfoCard from "../components/InfoCard";
 
-export default function payTransfer({ to = "", navigation }) {
+export default function payTransfer({ route = null }) {
   const { uid, logout } = useContext(AuthContext);
   const [bank, setBank] = useState([]);
   const [creditCard, setCreditCard] = useState([]);
   const [selectedBank, setSelectedBank] = useState("");
   const [selectedCard, setSelectedCard] = useState("");
   const [displayFund, setDisplayFund] = useState(true);
-  const [displayCard, setDisplayCard] = useState(true);
-  const [transferType, setTransferType] = useState(null);
+  const [displayCard, setDisplayCard] = useState(false);
+  const [transferType, setTransferType] = useState("");
 
   useEffect(() => {
     const { bank, creditCard } = getAccountDetailsById(uid);
     setBank(bank);
     setCreditCard(creditCard);
-  }, []);
+    let card = route.params.params;
+    if (card) {
+      setTransferType(card.type);
+      setSelectedCard(card.card);
+    }
+  }, [route]);
+
   return (
     <View style={styles.container}>
       <View style={styles.topContainer}>
@@ -144,7 +150,7 @@ export default function payTransfer({ to = "", navigation }) {
               </View>
             </View>
             <View style={styles.fundContainer}>
-              {!displayCard && selectedCard && (
+              {!displayCard && selectedCard ? (
                 <InfoCard
                   key={selectedCard.accountNumber}
                   title={selectedCard.accountType}
@@ -152,7 +158,7 @@ export default function payTransfer({ to = "", navigation }) {
                   amount={selectedCard.amount}
                   text="Outstanding Amount"
                 />
-              )}
+              ) : null}
               {displayCard &&
                 creditCard?.map((c) => (
                   <InfoCard

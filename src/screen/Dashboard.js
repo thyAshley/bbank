@@ -115,6 +115,11 @@ const Dashboard = ({ navigation }) => {
                 amount={b.amount}
                 text="Outstanding Amount"
                 callToAction="Pay Card"
+                ctAction={() =>
+                  navigation.navigate("Pay/Transfer", {
+                    params: { card: b, type: "card" },
+                  })
+                }
               />
             ))}
         </View>
