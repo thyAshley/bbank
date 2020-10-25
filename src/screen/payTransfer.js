@@ -13,17 +13,22 @@ import { getAccountDetailsById } from "../../mockdata";
 import { AuthContext } from "../context/AuthContext";
 import InfoCard from "../components/InfoCard";
 import PaymentModal from "../components/PaymentModal";
+import Axios from "axios";
+import Spinner from "../components/Spinner";
 
 export default function payTransfer({ route = null, navigation }) {
-  const { uid, logout, bank, creditCard } = useContext(AuthContext);
+  const { bank, creditCard, setBank, setCreditCard, setTransfer } = useContext(
+    AuthContext
+  );
 
   const [selectedBank, setSelectedBank] = useState("");
   const [selectedCard, setSelectedCard] = useState("");
+  const [payAmount, setPayAmount] = useState(0);
   const [displayFund, setDisplayFund] = useState(true);
   const [displayCard, setDisplayCard] = useState(false);
   const [transferType, setTransferType] = useState("");
   const [showModal, setShowModal] = useState(false);
-
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     let card = route.params.params;
     if (card) {
@@ -31,6 +36,28 @@ export default function payTransfer({ route = null, navigation }) {
       setSelectedCard(card.card);
     }
   }, [route]);
+
+  const payCard = async () => {
+    setLoading(true);
+    setTransfer(false);
+    const result = await Axios.post(
+      "http://is5009bbank.herokuapp.com/pay_creditcard",
+      {
+        BankAccount: selectedBank.AccountNumber,
+        CardNumber: selectedCard.CardNumber,
+        PayAmount: +payAmount,
+      }
+    );
+    if (result.data[0].status === "success") {
+      setTimeout(() => {
+        setLoading(false);
+        setTransfer(true);
+        setSelectedBank(null);
+        setSelectedCard(null);
+        setShowModal(true);
+      }, 2000);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -248,20 +275,39 @@ export default function payTransfer({ route = null, navigation }) {
                       flexDirection: "column",
                     }}
                   >
-                    <Text
-                      style={[
-                        styles.btn,
-                        {
-                          padding: 15,
-                          textAlign: "center",
-                          backgroundColor: color.secondary,
-                          color: "black",
-                        },
-                      ]}
-                      onPress={() => setShowModal(true)}
+                    {loading && <Spinner />}
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        marginHorizontal: 15,
+                      }}
                     >
-                      Make Payment
-                    </Text>
+                      <Text style={{ marginHorizontal: 10 }}>Amount:</Text>
+                      <TextInput
+                        style={{
+                          marginRight: 20,
+                          backgroundColor: "white",
+                          padding: 5,
+                        }}
+                        placeholder="Amount ($)"
+                        onChangeText={setPayAmount}
+                      />
+                      <Text
+                        style={[
+                          styles.btn,
+                          {
+                            padding: 5,
+                            textAlign: "center",
+                            backgroundColor: color.secondary,
+                            color: "black",
+                          },
+                        ]}
+                        onPress={payCard}
+                      >
+                        Make Payment
+                      </Text>
+                    </View>
                   </View>
                 )
               : null}

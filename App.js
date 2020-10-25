@@ -7,6 +7,7 @@ import Axios from "axios";
 const App = () => {
   const [uid, setUid] = useState(false);
   const [bank, setBank] = useState([]);
+  const [transfer, setTransfer] = useState(false);
   const [creditCard, setCreditCard] = useState([]);
   const login = async (email, password) => {
     const result = await Axios.post("http://is5009bbank.herokuapp.com/login", {
@@ -24,7 +25,17 @@ const App = () => {
 
   return (
     <AuthContext.Provider
-      value={{ uid, login, logout, bank, setBank, creditCard, setCreditCard }}
+      value={{
+        uid,
+        login,
+        logout,
+        bank,
+        setBank,
+        creditCard,
+        setCreditCard,
+        transfer,
+        setTransfer,
+      }}
     >
       <NavigationContainer>
         {uid ? <BottomTab /> : <AppStackNavigator />}

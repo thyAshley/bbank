@@ -9,13 +9,19 @@ import ContactList from "../components/ContactList";
 import Axios from "axios";
 import Promotions from "../components/Promotions";
 
-const Dashboard = ({ navigation }) => {
+const Dashboard = ({ navigation, route }) => {
   const [showAccount, setShowAccount] = useState(false);
   const [showCard, setShowCard] = useState(false);
-  const { uid, logout, bank, setBank, creditCard, setCreditCard } = useContext(
-    AuthContext
-  );
-
+  const {
+    uid,
+    logout,
+    bank,
+    setBank,
+    creditCard,
+    setCreditCard,
+    transfer,
+  } = useContext(AuthContext);
+  console.log(route);
   useEffect(() => {
     const getInfo = async () => {
       const result = await Axios.get(
@@ -28,7 +34,7 @@ const Dashboard = ({ navigation }) => {
       }
     };
     getInfo();
-  }, []);
+  }, [transfer, route]);
 
   const displayAccount = () => {
     setShowAccount(!showAccount);
@@ -37,7 +43,6 @@ const Dashboard = ({ navigation }) => {
   const displayCard = () => {
     setShowCard(!showCard);
   };
-  console.log(creditCard);
   return (
     <View style={{ flex: 1 }}>
       <ScrollView overScrollMode="always" style={{ flex: 1 }}>

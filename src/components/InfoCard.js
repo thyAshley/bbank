@@ -13,21 +13,6 @@ const InfoCard = ({
   ctAction,
   image,
 }) => {
-  const imagelink = () => {
-    switch (image) {
-      case "CIMB Bank":
-        return "../../assets/CIMB.png";
-      case "Citibank":
-        return "../../assets/Citibank.png";
-      case "RHB Bank":
-        return "../../assets/RHB.png";
-      default:
-        return "../../assets/dbs.png";
-    }
-  };
-
-  let link = imagelink();
-  console.log(link);
   return (
     <View style={[styles.container]}>
       <View style={styles.flexrow}>
