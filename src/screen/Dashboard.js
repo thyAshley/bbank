@@ -12,22 +12,23 @@ import Promotions from "../components/Promotions";
 const Dashboard = ({ navigation, route }) => {
   const [showAccount, setShowAccount] = useState(false);
   const [showCard, setShowCard] = useState(false);
+  const [detail, setDetail] = useState("");
   const {
     uid,
-    logout,
     bank,
     setBank,
     creditCard,
     setCreditCard,
     transfer,
   } = useContext(AuthContext);
-  console.log(route);
+
   useEffect(() => {
     const getInfo = async () => {
       const result = await Axios.get(
         `http://is5009bbank.herokuapp.com/customer_info/${uid}`
       );
       if (result) {
+        setDetail(result.data);
         const { Bank, CreditCard } = result.data;
         setBank(Bank);
         setCreditCard(CreditCard);
@@ -53,7 +54,7 @@ const Dashboard = ({ navigation, route }) => {
             style={styles.image}
             source={{ uri: "https://picsum.photos/id/1/200/300" }}
           />
-          <Text style={styles.text}>Welcome Oliver!</Text>
+          <Text style={styles.text}>Welcome {detail.Name}</Text>
         </View>
         <ContactList navigate={navigation.navigate} />
         <Text

@@ -1,5 +1,12 @@
 import React from "react";
-import { StyleSheet, Text, View, ScrollView, Image } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import color from "../config/color";
 
@@ -14,7 +21,11 @@ export default function ContactList({ navigate }) {
               name="squared-plus"
               size={30}
               color={color.primary}
-              onPress={() => navigate("Pay/Transfer")}
+              onPress={() =>
+                navigate("Pay/Transfer", {
+                  params: { type: "account", name: "" },
+                })
+              }
             />
           </View>
           <Text style={styles.text}>New</Text>
@@ -22,22 +33,47 @@ export default function ContactList({ navigate }) {
 
         <View style={styles.imgContainer}>
           <View style={styles.portrait}>
-            <Image
-              style={styles.image}
-              source={require("../../assets/2.jpg")}
-            />
+            <TouchableOpacity
+              onPress={() =>
+                navigate("Pay/Transfer", {
+                  params: {
+                    account: "123244500",
+                    type: "account",
+                    name: "Jane",
+                  },
+                })
+              }
+            >
+              <Image
+                style={styles.image}
+                source={require("../../assets/2.jpg")}
+              />
+            </TouchableOpacity>
           </View>
-          <Text style={styles.text}>John</Text>
+          <Text style={styles.text}>Jane</Text>
         </View>
 
         <View style={styles.imgContainer}>
           <View style={styles.portrait}>
-            <Image
-              style={styles.image}
-              source={require("../../assets/3.jpg")}
-            />
+            <TouchableOpacity
+              onPress={() =>
+                navigate("Pay/Transfer", {
+                  params: {
+                    account: "123244500",
+                    type: "account",
+                    name: "Jammy",
+                  },
+                })
+              }
+            >
+              <Image
+                style={styles.image}
+                source={require("../../assets/3.jpg")}
+                onPress={() => navigate("Pay/Transfer")}
+              />
+            </TouchableOpacity>
           </View>
-          <Text style={styles.text}>John</Text>
+          <Text style={styles.text}>Jammy</Text>
         </View>
 
         <View style={styles.imgContainer}>
@@ -57,7 +93,7 @@ export default function ContactList({ navigate }) {
               source={require("../../assets/5.jpg")}
             />
           </View>
-          <Text style={styles.text}>John</Text>
+          <Text style={styles.text}>George</Text>
         </View>
 
         <View style={styles.imgContainer}>

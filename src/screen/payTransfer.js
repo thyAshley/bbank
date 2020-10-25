@@ -23,39 +23,69 @@ export default function payTransfer({ route = null, navigation }) {
 
   const [selectedBank, setSelectedBank] = useState("");
   const [selectedCard, setSelectedCard] = useState("");
+  const [targetBank, setTargetBank] = useState("");
   const [payAmount, setPayAmount] = useState(0);
   const [displayFund, setDisplayFund] = useState(true);
   const [displayCard, setDisplayCard] = useState(false);
   const [transferType, setTransferType] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
+
   useEffect(() => {
-    let card = route.params.params;
-    if (card) {
-      setTransferType(card.type);
-      setSelectedCard(card.card);
+    let details = route.params.params;
+    if (details && details.type === "card") {
+      setTransferType(details.type);
+      setSelectedCard(details.card);
+    }
+    if (details && details.type === "account") {
+      setTransferType("account");
+      setTargetBank(details.account);
     }
   }, [route]);
+
+  console.log(targetBank);
 
   const payCard = async () => {
     setLoading(true);
     setTransfer(false);
-    const result = await Axios.post(
-      "http://is5009bbank.herokuapp.com/pay_creditcard",
-      {
-        BankAccount: selectedBank.AccountNumber,
-        CardNumber: selectedCard.CardNumber,
-        PayAmount: +payAmount,
+    if (transferType === "card") {
+      const result = await Axios.post(
+        "http://is5009bbank.herokuapp.com/pay_creditcard",
+        {
+          BankAccount: selectedBank.AccountNumber,
+          CardNumber: selectedCard.CardNumber,
+          PayAmount: +payAmount,
+        }
+      );
+      if (result.data[0].status === "success") {
+        setTimeout(() => {
+          setLoading(false);
+          setTransfer(true);
+          setSelectedBank(null);
+          setTargetBank(null);
+          setShowModal(true);
+        }, 2000);
       }
-    );
-    if (result.data[0].status === "success") {
-      setTimeout(() => {
-        setLoading(false);
-        setTransfer(true);
-        setSelectedBank(null);
-        setSelectedCard(null);
-        setShowModal(true);
-      }, 2000);
+    }
+    if (transferType === "account") {
+      const result = await Axios.post(
+        "http://is5009bbank.herokuapp.com/bank_transfer",
+        {
+          Sender: selectedBank.AccountNumber,
+          Receiver: targetBank,
+          Amount: +payAmount,
+        }
+      );
+      console.log(result);
+      if (result.data.status === "success") {
+        setTimeout(() => {
+          setLoading(false);
+          setTransfer(true);
+          setSelectedBank(null);
+          setSelectedCard(null);
+          setShowModal(true);
+        }, 2000);
+      }
     }
   };
 
@@ -210,9 +240,22 @@ export default function payTransfer({ route = null, navigation }) {
                         }}
                       />
                     ))}
+                  <TextInput
+                    style={[
+                      styles.input,
+                      {
+                        width: "90%",
+                        marginHorizontal: 20,
+                        marginVertical: 10,
+                      },
+                    ]}
+                    placeholder="Amount"
+                    keyboardType="number-pad"
+                    onChangeText={setPayAmount}
+                  />
                 </View>
               </Fragment>
-            ) : transferType === "others" ? (
+            ) : transferType === "account" ? (
               <View style={styles.methodContainer}>
                 <View style={styles.payMethod}>
                   <Text style={{ flexGrow: 1 }}>
@@ -242,6 +285,7 @@ export default function payTransfer({ route = null, navigation }) {
                     <TextInput
                       style={[styles.input, { flexGrow: 10 }]}
                       placeholder="Account ID"
+                      value={route.params.params.name}
                     />
                   </View>
                   <View style={{ flexDirection: "row" }}>
@@ -258,59 +302,41 @@ export default function payTransfer({ route = null, navigation }) {
                       style={[styles.input, { flexGrow: 10 }]}
                       placeholder="Amount"
                       keyboardType="number-pad"
+                      onChangeText={setPayAmount}
                     />
                   </View>
                 </View>
               </View>
             ) : null}
-            {selectedCard
-              ? setSelectedBank && (
-                  <View
-                    style={{
-                      width: "100%",
-                      height: 40,
-                      margin: 20,
-                      justifyContent: "center",
-                      alignItems: "center",
-                      flexDirection: "column",
-                    }}
-                  >
-                    {loading && <Spinner />}
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        marginHorizontal: 15,
-                      }}
-                    >
-                      <Text style={{ marginHorizontal: 10 }}>Amount:</Text>
-                      <TextInput
-                        style={{
-                          marginRight: 20,
-                          backgroundColor: "white",
-                          padding: 5,
-                        }}
-                        placeholder="Amount ($)"
-                        onChangeText={setPayAmount}
-                      />
-                      <Text
-                        style={[
-                          styles.btn,
-                          {
-                            padding: 5,
-                            textAlign: "center",
-                            backgroundColor: color.secondary,
-                            color: "black",
-                          },
-                        ]}
-                        onPress={payCard}
-                      >
-                        Make Payment
-                      </Text>
-                    </View>
-                  </View>
-                )
-              : null}
+            {selectedBank && (selectedCard || targetBank) ? (
+              <View
+                style={{
+                  width: "100%",
+                  height: 40,
+                  margin: 20,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  flexDirection: "column",
+                }}
+              >
+                {loading && <Spinner />}
+
+                <Text
+                  style={[
+                    styles.btn,
+                    {
+                      padding: 5,
+                      textAlign: "center",
+                      backgroundColor: color.secondary,
+                      color: "black",
+                    },
+                  ]}
+                  onPress={payCard}
+                >
+                  Make Payment
+                </Text>
+              </View>
+            ) : null}
             <View style={{ height: 20 }} />
           </ScrollView>
         </Fragment>
