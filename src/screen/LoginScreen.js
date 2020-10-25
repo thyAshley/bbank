@@ -1,35 +1,55 @@
+import Axios from "axios";
 import React, { useContext, useState } from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  TextInput,
+} from "react-native";
 
 import CustButton from "../components/CustButton";
 import CustText from "../components/CustText";
+import Spinner from "../components/Spinner";
 import color from "../config/color";
 import { AuthContext } from "../context/AuthContext";
 
 const LoginScreen = ({ navigation }) => {
-  const { login } = useContext(AuthContext);
+  const { login, uid } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const loginHandler = () => {
+    setLoading(true);
+    setTimeout(() => {
+      login(email, password);
+      setLoading(false);
+    }, 1500);
+  };
   return (
     <View style={styles.container}>
       <Text style={[styles.text, styles.header]}>Welcome Back!</Text>
       <Image style={styles.img} source={require("../../assets/signin.png")} />
-      <CustText
+      <TextInput
+        style={styles.inputText}
         placeholder="Enter your email address"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        autoCapitalize="none"
+        autoCorrect={false}
+        onChangeText={setEmail}
       />
-      <CustText
-        placeholder="Enter Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
+
+      <TextInput
+        style={styles.inputText}
+        placeholder="Enter your password"
+        autoCapitalize="none"
+        autoCorrect={false}
+        onChangeText={setPassword}
+        secureTextEntry
       />
-      <CustButton
-        type="login"
-        title="Login"
-        onPress={() => login(email, password)}
-      />
+      {loading && <Spinner />}
+      <CustButton type="login" title="Login" onPress={loginHandler} />
       <TouchableOpacity onPress={() => navigation.navigate("Register")}>
         <Text style={styles.text}>
           Not yet a member? <Text style={{ color: "dodgerblue" }}>Sign up</Text>
@@ -59,5 +79,14 @@ const styles = StyleSheet.create({
   },
   text: {
     color: color.text,
+  },
+  inputText: {
+    backgroundColor: "white",
+    borderRadius: 40,
+    color: "rgba(0,0,0,0.75)",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    marginVertical: 10,
+    width: "80%",
   },
 });

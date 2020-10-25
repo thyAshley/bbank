@@ -2,11 +2,19 @@ import React, { useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import AppStackNavigator, { BottomTab } from "./src/navigator";
 import { AuthContext } from "./src/context/AuthContext";
+import Axios from "axios";
 
 const App = () => {
   const [uid, setUid] = useState(false);
-  const login = (email, password) => {
-    setUid(3);
+
+  const login = async (email, password) => {
+    const result = await Axios.post("http://is5009bbank.herokuapp.com/login", {
+      Email: email,
+      Password: password,
+    });
+    if (result.status == 200) {
+      setUid(result.data.CustomerID);
+    }
   };
 
   const logout = () => {

@@ -1,7 +1,14 @@
 import React from "react";
 import { StyleSheet, TextInput } from "react-native";
 
-export default function CustText({ placeholder, children, keyboard, hidden }) {
+export default function CustText({
+  placeholder,
+  children,
+  keyboard,
+  hidden,
+  onChange,
+  ...otherProps
+}) {
   return (
     <TextInput
       style={styles.inputText}
@@ -10,20 +17,11 @@ export default function CustText({ placeholder, children, keyboard, hidden }) {
       autoCapitalize="none"
       autoCorrect={false}
       secureTextEntry={hidden}
+      {...otherProps}
     >
       {children}
     </TextInput>
   );
 }
 
-const styles = StyleSheet.create({
-  inputText: {
-    backgroundColor: "white",
-    borderRadius: 40,
-    color: "rgba(0,0,0,0.75)",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    marginVertical: 10,
-    width: "80%",
-  },
-});
+const styles = StyleSheet.create({});

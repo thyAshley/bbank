@@ -1,38 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
-import {
-  Button,
-  Image,
-  StyleSheet,
-  Text,
-  View,
-  ScrollView,
-  SafeAreaView,
-} from "react-native";
+import { Image, StyleSheet, Text, View, ScrollView } from "react-native";
 
 import Card from "../components/Card";
 import Circle from "../components/Circle";
 import { AuthContext } from "../context/AuthContext";
-import { getAccountDetailsById } from "../../mockdata";
 import InfoCard from "../components/InfoCard";
 import ContactList from "../components/ContactList";
-
-const dummyAccount = {
-  totalBalance: 6234.01,
-  accounts: [
-    {
-      bank: "dbs",
-      name: "Savings Account",
-      number: "123-567890-1",
-      balance: 3034.56,
-    },
-    {
-      bank: "uob",
-      name: "Basic Savings Account",
-      number: "123-567-789-0",
-      balance: 3200.0,
-    },
-  ],
-};
+import Axios from "axios";
+import Promotions from "../components/Promotions";
 
 const Dashboard = ({ navigation }) => {
   const [showAccount, setShowAccount] = useState(false);
@@ -42,9 +17,17 @@ const Dashboard = ({ navigation }) => {
   const [creditCard, setCreditCard] = useState([]);
 
   useEffect(() => {
-    const { bank, creditCard } = getAccountDetailsById(uid);
-    setBank(bank);
-    setCreditCard(creditCard);
+    const getInfo = async () => {
+      const result = await Axios.get(
+        `http://is5009bbank.herokuapp.com/customer_info/${uid}`
+      );
+      if (result) {
+        const { Bank, CreditCard } = result.data;
+        setBank(Bank);
+        setCreditCard(CreditCard);
+      }
+    };
+    getInfo();
   }, []);
 
   const displayAccount = () => {
@@ -54,6 +37,7 @@ const Dashboard = ({ navigation }) => {
   const displayCard = () => {
     setShowCard(!showCard);
   };
+  console.log(creditCard);
   return (
     <View style={{ flex: 1 }}>
       <ScrollView overScrollMode="always" style={{ flex: 1 }}>
@@ -81,26 +65,27 @@ const Dashboard = ({ navigation }) => {
           <Card
             title="Bank Accounts"
             text="Balance"
-            amount={bank.reduce((acc, val) => acc + val.amount, 0)}
+            amount={bank.reduce((acc, val) => acc + val.Balance, 0)}
             display={displayAccount}
             direction={showAccount}
           />
           {showAccount &&
             bank?.map((b) => (
               <InfoCard
-                key={b.accountNumber}
-                title={b.bankName}
-                accNumber={b.accountNumber}
-                amount={b.amount}
+                key={b.AccountNumber}
+                title={b.BankName}
+                accNumber={b.AccountNumber}
+                amount={b.Balance}
                 text="Available Balance"
                 callToAction="View Transaction"
+                image={b.BankName}
               />
             ))}
           <View style={{ height: 10 }} />
           <Card
             title="Credit Cards"
             text="Outstanding Amount"
-            amount={creditCard.reduce((acc, val) => acc + val.amount, 0)}
+            amount={creditCard.reduce((acc, val) => acc + val.AmountDue, 0)}
             backgroundColor="rgb(90,234,196)"
             display={displayCard}
             direction={showCard}
@@ -109,12 +94,13 @@ const Dashboard = ({ navigation }) => {
             creditCard?.map((b) => (
               <InfoCard
                 backgroundColor="rgb(90,234,196)"
-                key={b.cardId}
-                title={b.accountType}
-                accNumber={b.cardNumber}
-                amount={b.amount}
+                key={b.CardID}
+                title={b.CardName}
+                accNumber={b.CardNumber}
+                amount={b.AmountDue}
                 text="Outstanding Amount"
                 callToAction="Pay Card"
+                image={b.BankName}
                 ctAction={() =>
                   navigation.navigate("Pay/Transfer", {
                     params: { card: b, type: "card" },
@@ -124,6 +110,7 @@ const Dashboard = ({ navigation }) => {
             ))}
         </View>
         <View style={{ height: 40 }}></View>
+        <Promotions />
       </ScrollView>
     </View>
   );
