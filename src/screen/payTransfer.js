@@ -15,9 +15,8 @@ import InfoCard from "../components/InfoCard";
 import PaymentModal from "../components/PaymentModal";
 
 export default function payTransfer({ route = null, navigation }) {
-  const { uid, logout } = useContext(AuthContext);
-  const [bank, setBank] = useState([]);
-  const [creditCard, setCreditCard] = useState([]);
+  const { uid, logout, bank, creditCard } = useContext(AuthContext);
+
   const [selectedBank, setSelectedBank] = useState("");
   const [selectedCard, setSelectedCard] = useState("");
   const [displayFund, setDisplayFund] = useState(true);
@@ -26,9 +25,6 @@ export default function payTransfer({ route = null, navigation }) {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    const { bank, creditCard } = getAccountDetailsById(uid);
-    setBank(bank);
-    setCreditCard(creditCard);
     let card = route.params.params;
     if (card) {
       setTransferType(card.type);
@@ -78,21 +74,23 @@ export default function payTransfer({ route = null, navigation }) {
             <View style={styles.fundContainer}>
               {!displayFund && selectedBank && (
                 <InfoCard
-                  key={selectedBank.accountNumber}
-                  title={selectedBank.bankName}
-                  accNumber={selectedBank.accountNumber}
-                  amount={selectedBank.amount}
+                  key={selectedBank.AccountNumber}
+                  title={selectedBank.BankName}
+                  accNumber={selectedBank.AccountNumber}
+                  amount={selectedBank.Balance}
                   text="Available Balance"
+                  image={selectedBank.BankName}
                 />
               )}
 
               {displayFund &&
                 bank?.map((b) => (
                   <InfoCard
-                    key={b.accountNumber}
-                    title={b.bankName}
-                    accNumber={b.accountNumber}
-                    amount={b.amount}
+                    key={b.AccountNumber}
+                    title={b.BankName}
+                    accNumber={b.AccountNumber}
+                    amount={b.Balance}
+                    image={b.BankName}
                     text="Available Balance"
                     callToAction="SELECT"
                     ctAction={() => {
@@ -161,20 +159,22 @@ export default function payTransfer({ route = null, navigation }) {
                 <View style={styles.fundContainer}>
                   {!displayCard && selectedCard ? (
                     <InfoCard
-                      key={selectedCard.accountNumber}
-                      title={selectedCard.accountType}
-                      accNumber={selectedCard.cardNumber}
-                      amount={selectedCard.amount}
+                      key={selectedCard.CardID}
+                      title={selectedCard.CardName}
+                      accNumber={selectedCard.CardNumber}
+                      amount={selectedCard.AmountDue}
                       text="Outstanding Amount"
+                      image={selectedCard.BankName}
                     />
                   ) : null}
                   {displayCard &&
                     creditCard?.map((c) => (
                       <InfoCard
-                        key={c.cardId}
-                        title={c.accountType}
-                        accNumber={c.cardNumber}
-                        amount={c.amount}
+                        key={c.CardID}
+                        title={c.CardName}
+                        accNumber={c.CardNumber}
+                        amount={c.AmountDue}
+                        image={c.BankName}
                         text="Outstanding Amount"
                         callToAction="PAY"
                         ctAction={() => {

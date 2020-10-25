@@ -12,9 +12,9 @@ import Promotions from "../components/Promotions";
 const Dashboard = ({ navigation }) => {
   const [showAccount, setShowAccount] = useState(false);
   const [showCard, setShowCard] = useState(false);
-  const { uid, logout } = useContext(AuthContext);
-  const [bank, setBank] = useState([]);
-  const [creditCard, setCreditCard] = useState([]);
+  const { uid, logout, bank, setBank, creditCard, setCreditCard } = useContext(
+    AuthContext
+  );
 
   useEffect(() => {
     const getInfo = async () => {

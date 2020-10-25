@@ -11,14 +11,45 @@ const InfoCard = ({
   text,
   callToAction,
   ctAction,
+  image,
 }) => {
+  const imagelink = () => {
+    switch (image) {
+      case "CIMB Bank":
+        return "../../assets/CIMB.png";
+      case "Citibank":
+        return "../../assets/Citibank.png";
+      case "RHB Bank":
+        return "../../assets/RHB.png";
+      default:
+        return "../../assets/dbs.png";
+    }
+  };
+
+  let link = imagelink();
+  console.log(link);
   return (
     <View style={[styles.container]}>
       <View style={styles.flexrow}>
-        <Image
-          style={styles.banklogo}
-          source={require("../../assets/dbs.png")}
-        />
+        {image === "RHB Bank" && (
+          <Image
+            style={styles.banklogo}
+            source={require(`../../assets/RHB.png`)}
+          />
+        )}
+        {image === "Citibank" && (
+          <Image
+            style={styles.banklogo}
+            source={require(`../../assets/Citibank.png`)}
+          />
+        )}
+        {image === "CIMB Bank" && (
+          <Image
+            style={styles.banklogo}
+            source={require(`../../assets/CIMB.png`)}
+          />
+        )}
+
         <View style={styles.flexrow}>
           <View style={styles.flexcol}>
             <Text style={styles.title}>{title}</Text>
@@ -90,6 +121,7 @@ const styles = StyleSheet.create({
     top: 5,
     borderWidth: 1,
     borderColor: "rgba(0,0,0,0.25)",
+    resizeMode: "contain",
   },
   callAction: {
     fontSize: 12,
