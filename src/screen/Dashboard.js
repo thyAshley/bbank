@@ -85,6 +85,7 @@ const Dashboard = ({ navigation, route }) => {
                 text="Available Balance"
                 callToAction="View Transaction"
                 image={b.BankName}
+                ctAction={() => navigation.navigate("Insight")}
               />
             ))}
           <View style={{ height: 10 }} />

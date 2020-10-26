@@ -12,16 +12,30 @@ import InProgress from "../screen/InProgress";
 import color from "../config/color";
 import Account from "../screen/Account";
 import payTransfer from "../screen/payTransfer";
+import Insights from "../screen/Insights";
 
 const Stack = createStackNavigator();
+const Insight = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
+export const InsightsTab = () => {
+  return (
+    <Insight.Navigator>
+      <Insight.Screen
+        name="Dashboard"
+        component={Dashboard}
+        options={{ headerShown: false }}
+      />
+      <Insight.Screen name="Insight" component={Insights} />
+    </Insight.Navigator>
+  );
+};
 export const BottomTab = () => {
   return (
     <Tab.Navigator tabBarOptions={{ activeTintColor: color.secondary }}>
       <Tab.Screen
         name="Dashboard"
-        component={Dashboard}
+        component={InsightsTab}
         options={{
           headerShown: false,
           tabBarIcon: ({ focused }) => (

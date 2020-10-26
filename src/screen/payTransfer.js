@@ -43,8 +43,6 @@ export default function payTransfer({ route = null, navigation }) {
     }
   }, [route]);
 
-  console.log(targetBank);
-
   const payCard = async () => {
     setLoading(true);
     setTransfer(false);
@@ -84,6 +82,7 @@ export default function payTransfer({ route = null, navigation }) {
           setSelectedBank(null);
           setSelectedCard(null);
           setShowModal(true);
+          setTransfer(false);
         }, 2000);
       }
     }
