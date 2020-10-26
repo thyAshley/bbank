@@ -5,7 +5,7 @@ import { StyleSheet, View, Text as IText } from "react-native";
 import { PieChart } from "react-native-svg-charts";
 import { Text } from "react-native-svg";
 import color from "../config/color";
-import { ProgressBar } from "react-natve-paper";
+import { ProgressBar, Colors } from "react-native-paper";
 
 export default function Insights() {
   const [category, setCategory] = useState(null);
@@ -93,10 +93,22 @@ export default function Insights() {
 
   return (
     category && (
-      <View style={{ flex: 1, backgroundColor: color.primary }}>
+      <View style={{ flex: 1 }}>
         <View style={styles.container}>
+          <IText
+            style={{
+              textAlign: "center",
+              fontSize: 18,
+              color: color.textLight,
+              marginBottom: 10,
+              fontWeight: "700",
+              textDecorationLine: "underline",
+            }}
+          >
+            October Expenses
+          </IText>
           <PieChart
-            style={{ height: 250 }}
+            style={{ height: 220 }}
             valueAccessor={({ item }) => item.amount}
             data={data}
             spacing={0}
@@ -107,14 +119,15 @@ export default function Insights() {
           </PieChart>
         </View>
         <View style={{ flex: 1 }}>
-          <View style={styles.headerContainer}>
-            <IText style={styles.text}>Category</IText>
-            <IText style={styles.text}>Spending</IText>
-          </View>
           <View style={styles.detailContainer}>
-            {category.map((cat) => (
-              <View>
-                <IText>{cat.key}</IText>
+            {category.map((cat, idx) => (
+              <View key={idx} style={{ flexDirection: "column" }}>
+                <IText style={styles.text}>{cat.key}</IText>
+                <ProgressBar
+                  color={colors[cat.key]}
+                  progress={cat.amount / 500}
+                  style={[styles.progress]}
+                />
               </View>
             ))}
           </View>
@@ -138,10 +151,18 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginTop: 10,
   },
+  progress: {
+    height: 20,
+    width: "95%",
+    marginVertical: 10,
+    borderWidth: 1,
+    borderRadius: 20,
+    borderColor: "rgba(0,0,0,0.25)",
+  },
   text: {
     fontSize: 20,
     color: "black",
-    marginRight: 25,
+    marginRight: 20,
     color: color.textLight,
   },
 });
