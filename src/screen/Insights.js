@@ -1,21 +1,19 @@
 import Axios from "axios";
-import React, { useState } from "react";
-import { useEffect } from "react";
+import React, { useState, useEffect } from "react";
+
 import { StyleSheet, View, Text as IText } from "react-native";
-import { PieChart } from "react-native-svg-charts";
-import { Text } from "react-native-svg";
 import color from "../config/color";
 import { ProgressBar, Colors } from "react-native-paper";
 
 export default function Insights() {
   const [category, setCategory] = useState(null);
   const colors = {
-    Bill: "#FCEE7F",
-    Food: "salmon",
-    Medical: "#A13BE0",
-    Shopping: "#28CBFF",
-    Transport: "#FF2865",
-    Uncategorised: "dodgerblue",
+    Bill: "salmon",
+    Food: "coral",
+    Medical: "tomato",
+    Shopping: "tomato",
+    Transport: "orange",
+    Uncategorised: "darkorange",
   };
   useEffect(() => {
     const getInsights = async () => {
@@ -26,71 +24,32 @@ export default function Insights() {
           Month: "Oct",
         }
       );
+
       let chartData = [];
       if (result.data) {
         for (let key in result.data) {
-          if (key !== "CustomerID" && key !== "Month" && result.data[key] !== 0)
+          if (
+            key === "Bill" ||
+            key === "Food" ||
+            key === "Medical" ||
+            key === "Shopping" ||
+            key === "Transport" ||
+            key === "Uncategorised"
+          ) {
             chartData.push({
               key: key,
               amount: result.data[key],
               svg: { fill: colors[key] },
+              target: result.data[`${key}_B`],
             });
+          }
         }
+        setCategory(chartData);
       }
-      setCategory(chartData);
     };
-
     getInsights();
   }, []);
   console.log(category);
-  const data = [
-    {
-      key: "test",
-      amount: 50,
-      svg: { fill: "#600080" },
-    },
-    {
-      key: 2,
-      amount: 50,
-      svg: { fill: "#9900cc" },
-    },
-    {
-      key: 3,
-      amount: 40,
-      svg: { fill: "#c61aff" },
-    },
-    {
-      key: 4,
-      amount: 95,
-      svg: { fill: "#d966ff" },
-    },
-    {
-      key: 5,
-      amount: 35,
-      svg: { fill: "#ecb3ff" },
-    },
-  ];
-  const Labels = ({ slices, height, width }) => {
-    return slices.map((slice, index) => {
-      const { labelCentroid, pieCentroid, data } = slice;
-      return (
-        <Text
-          key={index}
-          x={pieCentroid[0]}
-          y={pieCentroid[1]}
-          fill={color.textDark}
-          textAnchor={"middle"}
-          alignmentBaseline={"middle"}
-          fontSize={13}
-          stroke={color.textDark}
-          strokeWidth={0.4}
-        >
-          {`$ ${data.amount}`}
-        </Text>
-      );
-    });
-  };
-
   return (
     category && (
       <View style={{ flex: 1 }}>
@@ -107,25 +66,31 @@ export default function Insights() {
           >
             October Expenses
           </IText>
-          <PieChart
-            style={{ height: 220 }}
-            valueAccessor={({ item }) => item.amount}
-            data={data}
-            spacing={0}
-            outerRadius={"95%"}
-            data={category}
-          >
-            <Labels />
-          </PieChart>
         </View>
         <View style={{ flex: 1 }}>
           <View style={styles.detailContainer}>
             {category.map((cat, idx) => (
               <View key={idx} style={{ flexDirection: "column" }}>
-                <IText style={styles.text}>{cat.key}</IText>
+                <View style={{ flexDirection: "row" }}>
+                  <IText style={styles.text}>{cat.key}</IText>
+                  <IText
+                    style={{
+                      fontSize: 20,
+                      justifyContent: "flex-end",
+                      color: color.textLight,
+                      position: "absolute",
+                      right: 10,
+                    }}
+                  >
+                    ${cat.amount}
+                    {cat.key !== "Uncategorised" ? `/ $${cat.target}` : null}
+                  </IText>
+                </View>
                 <ProgressBar
                   color={colors[cat.key]}
-                  progress={cat.amount / 500}
+                  progress={
+                    cat.amount / (cat.key !== "Uncategorised" ? cat.target : 1)
+                  }
                   style={[styles.progress]}
                 />
               </View>
@@ -140,7 +105,7 @@ export default function Insights() {
 const styles = StyleSheet.create({
   container: {
     alignContent: "center",
-    marginTop: 15,
+    padding: 10,
   },
   headerContainer: {
     marginHorizontal: 20,
@@ -161,7 +126,6 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 20,
-    color: "black",
     marginRight: 20,
     color: color.textLight,
   },

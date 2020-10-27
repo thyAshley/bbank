@@ -8,6 +8,7 @@ import InfoCard from "../components/InfoCard";
 import ContactList from "../components/ContactList";
 import Axios from "axios";
 import Promotions from "../components/Promotions";
+import color from "../config/color";
 
 const Dashboard = ({ navigation, route }) => {
   const [showAccount, setShowAccount] = useState(false);
@@ -57,16 +58,34 @@ const Dashboard = ({ navigation, route }) => {
           <Text style={styles.text}>Welcome {detail.Name}</Text>
         </View>
         <ContactList navigate={navigation.navigate} />
-        <Text
-          style={{
-            fontSize: 18,
-            fontWeight: "bold",
-            marginLeft: 25,
-            marginTop: 10,
-          }}
-        >
-          Summary
-        </Text>
+        <View style={{ flexDirection: "row" }}>
+          <Text
+            style={{
+              fontSize: 18,
+              fontWeight: "bold",
+              marginLeft: 25,
+              marginTop: 10,
+            }}
+          >
+            Summary
+          </Text>
+          <Text
+            onPress={() => navigation.navigate("Insight")}
+            style={{
+              position: "absolute",
+              right: 30,
+              fontSize: 13,
+              marginTop: 10,
+              borderColor: color.primary,
+              borderWidth: 1,
+              borderRadius: 20,
+              padding: 10,
+              color: color.primary,
+            }}
+          >
+            View Insights
+          </Text>
+        </View>
         <View style={styles.summaryContainer}>
           <Card
             title="Bank Accounts"
