@@ -13,6 +13,7 @@ import color from "../config/color";
 import Account from "../screen/Account";
 import payTransfer from "../screen/payTransfer";
 import Insights from "../screen/Insights";
+import Transaction from "../screen/Transaction";
 
 const Stack = createStackNavigator();
 const Insight = createStackNavigator();
@@ -27,6 +28,7 @@ export const InsightsTab = () => {
         options={{ headerShown: false }}
       />
       <Insight.Screen name="Insight" component={Insights} />
+      <Insight.Screen name="Transaction" component={Transaction} />
     </Insight.Navigator>
   );
 };

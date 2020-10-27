@@ -49,7 +49,6 @@ export default function Insights() {
     };
     getInsights();
   }, []);
-  console.log(category);
   return (
     category && (
       <View style={{ flex: 1 }}>
