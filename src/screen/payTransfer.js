@@ -38,7 +38,7 @@ export default function payTransfer({ route = null, navigation }) {
       setSelectedCard(details.card);
     }
     if (details && details.type === "account") {
-      setTransferType("account");
+      setTransferType("others");
       setTargetBank(details.account);
     }
   }, [route]);
@@ -254,7 +254,7 @@ export default function payTransfer({ route = null, navigation }) {
                   />
                 </View>
               </Fragment>
-            ) : transferType === "account" ? (
+            ) : transferType === "others" ? (
               <View style={styles.methodContainer}>
                 <View style={styles.payMethod}>
                   <Text style={{ flexGrow: 1 }}>
@@ -284,7 +284,13 @@ export default function payTransfer({ route = null, navigation }) {
                     <TextInput
                       style={[styles.input, { flexGrow: 10 }]}
                       placeholder="Account ID"
-                      value={route.params.params.name}
+                      value={
+                        (route &&
+                          route.params &&
+                          route.params.params &&
+                          route.params.params.name) ||
+                        ""
+                      }
                     />
                   </View>
                   <View style={{ flexDirection: "row" }}>

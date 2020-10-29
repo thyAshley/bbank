@@ -78,40 +78,23 @@ export default function ContactList({ navigate }) {
 
         <View style={styles.imgContainer}>
           <View style={styles.portrait}>
-            <Image
-              style={styles.image}
-              source={require("../../assets/4.jpg")}
-            />
-          </View>
-          <Text style={styles.text}>John</Text>
-        </View>
-
-        <View style={styles.imgContainer}>
-          <View style={styles.portrait}>
-            <Image
-              style={styles.image}
-              source={require("../../assets/5.jpg")}
-            />
-          </View>
-          <Text style={styles.text}>George</Text>
-        </View>
-
-        <View style={styles.imgContainer}>
-          <View style={styles.portrait}>
-            <Image
-              style={styles.image}
-              source={require("../../assets/6.jpg")}
-            />
-          </View>
-          <Text style={styles.text}>John</Text>
-        </View>
-
-        <View style={styles.imgContainer}>
-          <View style={styles.portrait}>
-            <Image
-              style={styles.image}
-              source={require("../../assets/7.jpg")}
-            />
+            <TouchableOpacity
+              onPress={() =>
+                navigate("Pay/Transfer", {
+                  params: {
+                    account: "123244500",
+                    type: "account",
+                    name: "John",
+                  },
+                })
+              }
+            >
+              <Image
+                style={styles.image}
+                source={require("../../assets/4.jpg")}
+                onPress={() => navigate("Pay/Transfer")}
+              />
+            </TouchableOpacity>
           </View>
           <Text style={styles.text}>John</Text>
         </View>
