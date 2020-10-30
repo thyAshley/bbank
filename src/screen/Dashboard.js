@@ -45,16 +45,15 @@ const Dashboard = ({ navigation, route }) => {
   const displayCard = () => {
     setShowCard(!showCard);
   };
+  console.log(detail);
+
   return (
     <View style={{ flex: 1 }}>
       <ScrollView overScrollMode="always" style={{ flex: 1 }}>
         <Circle />
         <Circle otherStyle={styles.circle2} />
         <View style={styles.top}>
-          <Image
-            style={styles.image}
-            source={{ uri: "https://picsum.photos/id/1/200/300" }}
-          />
+          <Image style={styles.image} source={require("../../assets/6.jpg")} />
           <Text style={styles.text}>Welcome {detail.Name}</Text>
         </View>
         <ContactList navigate={navigation.navigate} />
@@ -172,6 +171,7 @@ const styles = StyleSheet.create({
     borderRadius: 75,
     height: 125,
     width: 125,
+    zIndex: 10,
   },
   text: {
     color: "white",
