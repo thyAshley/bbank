@@ -18,3 +18,7 @@ Figma Design: [Link](https://www.figma.com/file/ajuYRrgOTgfsfy9yOIxU1X/Bank-Appl
 * Please take note that for ios application, you need to be registered with the apple developer program which cost 99 USD/year, we recommend building on android as it is free.
 
 4) After the app is converted into either a APK or IPA, install the app on your local device or on a android/ios simulator.
+
+5) Test account details
+> Username: jng@gmail.com
+> Password: abc123
