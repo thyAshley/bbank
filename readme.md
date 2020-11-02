@@ -21,4 +21,5 @@ Figma Design: [Link](https://www.figma.com/file/ajuYRrgOTgfsfy9yOIxU1X/Bank-Appl
 
 5) Test account details
 > Username: jng@gmail.com
+
 > Password: abc123
